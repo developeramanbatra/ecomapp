@@ -1,15 +1,30 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import UserContext from "../UserContext";
 var ShowCart=()=>
 {
     const [cartdata,setcartdata] = useState([]);
+    const [carttotal,setcarttotal] = useState();
     const {user} = useContext(UserContext);
+    const navigate = useNavigate();
     useEffect(()=>
     {
-        fetchcart();
-    },[])
+        if(user)
+        {
+            fetchcart();
+        }
+    },[user])
+
+    useEffect(()=>
+    {
+        var gtotal=0;
+        for(var i=0;i<cartdata.length;i++)
+        {
+            gtotal=gtotal+cartdata[i].tcost;//81+692=
+        }
+        setcarttotal(gtotal);
+    },[cartdata])
 
     var fetchcart=async ()=>
     {
@@ -20,11 +35,7 @@ var ShowCart=()=>
             if(resp.ok)
             {
                 var result = await resp.json(); 
-                if(result.statuscode===0)
-                {
-                    toast.error("No products found in cart");
-                }
-                else if(result.statuscode===1)
+                if(result.statuscode===1)
                 {
                     setcartdata(result.cartdata);
                 }
@@ -39,6 +50,11 @@ var ShowCart=()=>
         {
             toast.error(err);
         }
+    }
+
+    var gotocheckout=()=>
+    {
+        navigate("/checkout");
     }
 
     var ondel= async(uid)=>
@@ -90,9 +106,10 @@ var ShowCart=()=>
 	    </div>
 	<div className="login">
 		<div className="container">
-			<h2>Your Cart</h2><br/>
             {
                 cartdata.length>0?
+                <>
+                <h2>Your Cart</h2><br/>
                 <table className="timetable_sub">
                     <tbody>
                         <tr>
@@ -111,12 +128,14 @@ var ShowCart=()=>
                                 <td>{data.rate}</td>
                                 <td>{data.qty}</td>
                                 <td>{data.tcost}</td>
-                                <td><button onClick={()=>ondel(data._id)}>Delete</button></td>
+                                <td><button className="btn btn-danger" onClick={()=>ondel(data._id)}>Delete</button></td>
                             </tr>
                         )
                         }
                     </tbody>
-                </table>:null
+                </table><br/>Your cart total is Rs.{carttotal}/-<br/><br/>
+                <button className="btn btn-primary" onClick={gotocheckout}>Checkout</button>
+                </>:<h2>Your cart is empty. Please add something</h2>
             }	
 		</div>
 	</div>

@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import UserContext from "../UserContext";
 var Login=()=>
 {
@@ -34,17 +35,17 @@ var Login=()=>
 				}
 				else if(result.statuscode===0)
 				{
-					setmsg("Incorrect Username/Password");
+					toast.error("Incorrect Username/Password");
 				}
 			}
 			else
 			{
-				setmsg("Error Occured")
+				toast.error("Error Occured")
 			}
 		}
 		catch (err) 
 		{
-			setmsg(err);
+			toast.error(err);
 		}
 	}
 	return(
@@ -65,11 +66,12 @@ var Login=()=>
 			<div className="login-form-grids animated wow slideInUp" data-wow-delay=".5s">
 				<form name="form1">
 					<input type="email" placeholder="Email Address" name="un" onChange={(e)=>setuname(e.target.value)} required=" "/>
-					<input type="password" placeholder="Password" name="pass" onChange={(e)=>setpass(e.target.value)} required=" "/>
+					<input type="password" placeholder="Password" name="pass" onChange={(e)=>setpass(e.target.value)} required=" "/><br/>
+					
+					<input type="button" onClick={onlogin} value="Login"/><br/>
 					<div className="forgot">
 						<a href="#">Forgot Password?</a>
 					</div>
-					<input type="button" onClick={onlogin} value="Login"/><br/><br/>
 					{msg}
 				</form>
 			</div>

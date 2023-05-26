@@ -420,6 +420,42 @@ app.get("/api/fetchcart/:uname",async (req,res)=>
     }   
 })
 
+//Checkout/Order APIs
+var orderSchema = new mongoose.Schema({address:String,orderamt:Number,pmode:String,username:String,OrderDate:String,carddetails:[String],status:String,items:[String]},{versionKey: false})
+
+const orderModel = mongoose.model('Orders', orderSchema,"Orders");
+
+app.post("/api/saveorder",async (req,res)=>
+{
+    var orderdt = new Date();
+    var newrecord = new orderModel({address:req.body.address,orderamt:req.body.orderamt,pmode:req.body.pmode,username:req.body.uname,OrderDate:orderdt,carddetails:req.body.carddetails,status:req.body.status,items:req.body.cartdata});
+
+    var result = await newrecord.save();
+    console.log(result)
+    if(result)
+    {
+        res.send({statuscode:1})
+    }
+    else
+    {
+        res.send({statuscode:0})
+    }
+})
+
+app.get("/api/fetchorderdetails",async (req,res)=>
+{
+    var result = await orderModel.findOne({username:req.query.un}).sort({"OrderDate":-1});
+    console.log(result)
+    if(!result)
+    {
+        res.send({statuscode:0})
+    }
+    else
+    {
+        res.send({statuscode:1,orderdata:result})
+    }   
+})
+
 app.listen(port,()=>
 {
     console.log("Server is running...");

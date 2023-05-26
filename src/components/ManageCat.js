@@ -82,22 +82,22 @@ var ManageCat=()=>
                     var result = await resp.json(); //result={msg:"Signup Successfull"}
                     if(result.statuscode===1)
                     {
-                        setmsg("Category added successfully")
+                        toast.success("Category added successfully")
                         fetchcategories();
                     }
                     else if(result.statuscode===0)
                     {
-                        setmsg("Category not added successfully");
+                        toast.error("Category not added successfully");
                     }
                 }
                 else
                 {
-                    setmsg("Error Occured")
+                    toast.error("Error Occured")
                 }
             }
             catch (err) 
             {
-                setmsg(err);
+                toast.error(err);
             }
         }
         else
@@ -130,12 +130,12 @@ var ManageCat=()=>
                 }
                 else
                 {
-                    setmsg("Error Occured")
+                    toast.error("Error Occured")
                 }
             }
             catch (err) 
             {
-                setmsg(err);
+                toast.error(err);
             }
         }	
 	}

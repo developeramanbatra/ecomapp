@@ -49,7 +49,7 @@ var Footer = () => {
             <div className="footer-copy">
 
                 <div className="container">
-                    <p>© 2017 Super Market. All rights reserved | Design by <a href="http://w3layouts.com/">W3layouts</a></p>
+                    <p>© 2023. All rights reserved | Design by <a>Aman Batra</a></p>
                 </div>
             </div>
 
