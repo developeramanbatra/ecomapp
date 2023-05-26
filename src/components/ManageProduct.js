@@ -176,6 +176,44 @@ var ManageProduct=()=>
             setmsg(err);
         }		
 	}
+    const del = async (uid) => 
+	{
+		const uchoice = window.confirm("Are you sure to delete ?")
+		if (uchoice)
+		 {
+            try
+            {
+                const resp = await fetch(`http://localhost:9000/api/delproduct/${uid}`, 
+                {
+                        method: "delete"
+                })
+                if (resp.ok)
+                {
+                    const result = await resp.json()
+                    if (result.statuscode === 1)
+                    { 
+                        toast.success("Sub Category Deleted Succesfully")
+                        fetchprods()
+                        setprodsdata([]) //// Due to Asynchrous...up or down fetchmembers() doesn't make any diff AND if asynchronous then without reload working possible
+                    }
+                    else if (result.statuscode === 0)
+                    {
+                        toast.error("Error While Deleting...Try Again")
+
+                    }
+                }
+                else
+                {
+                    toast.error("Error Occured")
+                }
+            }
+            catch (err)
+            {
+                toast.error(err)
+            }
+            }
+	}
+
 
 	return(
     <>
@@ -251,7 +289,7 @@ var ManageProduct=()=>
                                 <td>{data.rate}</td>
                                 <td>{data.stock}</td>
                                 <td><button onClick={()=>onupdate(data._id)}>Update</button></td>
-                                <td><button>Delete</button></td>
+                                <td><button onClick={()=>del(data._id)}>Delete</button></td>
                             </tr>
                         )
                         }

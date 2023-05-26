@@ -119,7 +119,7 @@ app.delete("/api/delmember/:membid",async(req,res)=>
    if(result.deletedCount===1)
    {
     res.send({statuscode:1})
-   }
+   } 
    else
    {
     res.send({statuscode:0})
@@ -239,6 +239,21 @@ app.put("/api/updatecategory", upload.single('picture'),async (req, res)=>
   });
 
 
+app.delete("/api/delcat/:catid",async(req,res)=>
+{
+    const result= await categorymodel.deleteOne({_id:req.params.catid})
+    if(result.deletedCount===1)
+    {
+    res.send({statuscode:1})
+    } 
+    else
+    {
+    res.send({statuscode:0})
+    }
+})
+  
+
+
 
 // Sub Categories APIs
 
@@ -331,6 +346,19 @@ app.put("/api/updatesubcategory", upload.single('picture'),async (req, res)=>
     }
   });
 
+  app.delete("/api/delsubcat/:subcatid",async(req,res)=>
+  {
+      const result= await subCategoryModel.deleteOne({_id:req.params.subcatid})
+      if(result.deletedCount===1)
+      {
+      res.send({statuscode:1})
+      } 
+      else
+      {
+      res.send({statuscode:0})
+      }
+  })
+
 //Product APIs
 
 var productSchema = new mongoose.Schema({catid:String,subcatid:String,prodname:String,rate:Number,discount:Number,stock:Number,descritpion:String,featured:String,prodpic:String,addedon:String},{versionKey: false})
@@ -384,6 +412,18 @@ app.get("/api/fetchprodbyid/:pid",async (req,res)=>
     }   
 })
 
+app.delete("/api/delproduct/:prodid",async(req,res)=>
+{
+    const result= await productModel.deleteOne({_id:req.params.prodid})
+    if(result.deletedCount===1)
+    {
+    res.send({statuscode:1})
+    } 
+    else
+    {
+    res.send({statuscode:0})
+    }
+})
 
 //Cart APIs
 

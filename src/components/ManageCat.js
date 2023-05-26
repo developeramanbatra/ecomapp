@@ -140,6 +140,44 @@ var ManageCat=()=>
         }	
 	}
 
+    const del = async (uid) => 
+	{
+		const uchoice = window.confirm("Are you sure to delete ?")
+		if (uchoice)
+		 {
+            try
+            {
+                const resp = await fetch(`http://localhost:9000/api/delcat/${uid}`, 
+                {
+                        method: "delete"
+                })
+                if (resp.ok)
+                {
+                    const result = await resp.json()
+                    if (result.statuscode === 1)
+                    { 
+                        toast.success("Category Deleted Succesfully")
+                        fetchcategories()
+                        setcatlist([]) //// Due to Asynchrous...up or down fetchmembers() doesn't make any diff AND if asynchronous then without reload working possible
+                    }
+                    else if (result.statuscode === 0)
+                    {
+                        toast.error("Error While Deleting...Try Again")
+
+                    }
+                }
+                else
+                {
+                    toast.error("Error Occured")
+                }
+            }
+            catch (err)
+            {
+                toast.error(err)
+            }
+            }
+	}
+
 	return(
     <>
 	    <div className="breadcrumbs">
@@ -185,7 +223,7 @@ var ManageCat=()=>
                                 <td><img alt="categorypic" src={`uploads/${data.catpic}`} height='75'/></td>
                                 <td>{data.catname}</td>
                                 <td><button onClick={()=>onupdate(data)}>Update</button></td>
-                                <td><button>Delete</button></td>
+                                <td><button onClick={()=>del(data._id)}>Delete</button></td>
                             </tr>
                         )
                         }
