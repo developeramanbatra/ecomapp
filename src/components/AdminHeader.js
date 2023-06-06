@@ -34,7 +34,7 @@ var AdminHeader = () => {
                                 user ?
                                     <>
                                         <li><Link to="/changepassword"> Change Password </Link></li>
-                                        <li><Link to="/orderhistory"> My orders </Link></li>
+                                        <li><Link to="/vieworders"> View orders </Link></li>
                                         <li><button className="btn btn-danger" onClick={onlogout}> Logout </button></li>
                                     </> :
                                     <>
@@ -53,7 +53,7 @@ var AdminHeader = () => {
                 <div className="container">
                     <div className="w3ls_logo_products_left1">
                         <ul className="phone_email">
-                            <li><i className="fa fa-phone" aria-hidden="true"></i>Order online or call us : (+0123) 234 567</li>
+                            <li><i className="fa fa-phone" aria-hidden="true"></i>Order Online or call us : (+91) 70800-75800</li>
 
                         </ul>
                     </div>

@@ -68,7 +68,7 @@ var Header = () => {
 		<div className="container">
 		<div className="w3ls_logo_products_left1">
 				<ul className="phone_email">
-					<li> </li>
+				<li><i className="fa fa-phone" aria-hidden="true"></i>Order Online or call us : (+91) 70800-75800</li>
 					
 				</ul>
 			</div>
