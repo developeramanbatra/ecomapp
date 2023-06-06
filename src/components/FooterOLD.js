@@ -1,4 +1,4 @@
-var Footer = () => {
+var Footer1 = () => {
     return (
         <>
         <div className="footer">
@@ -57,4 +57,4 @@ var Footer = () => {
         </>
     )
 }
-export default Footer;
+export default Footer1;

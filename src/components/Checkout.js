@@ -13,14 +13,16 @@ var Checkout = () => {
 	const navigate = useNavigate();
 	const { user } = useContext(UserContext);
 	const [cartdata, setcartdata] = useState();
-	useEffect(() => {
-		if (pmode === "Credit/Debit Card") {
+	useEffect(() => 
+	{
+		if (pmode === "Credit/Debit Card") 
+		{
 			setflag(true);
 		}
 		else {
 			setflag(false);
 		}
-	}, [pmode])
+	},[pmode])
 	var fetchcart = async () => {
 		try {
 			const resp = await fetch(`http://localhost:9000/api/fetchcart/${user.username}`)
@@ -49,7 +51,7 @@ var Checkout = () => {
 	}, [cartdata])
 
 	var saveorder = async () => {
-		var carddetails = [hname, cardno, expiry, cvv];
+		var carddetails = {hname, cardno, expiry, cvv};
 
 		var orderdata = { address, orderamt: sessionStorage.getItem("billamt"), pmode, uname: user.username, carddetails, status: "Payment Received, processing", cartdata }
 
@@ -69,7 +71,7 @@ var Checkout = () => {
 					navigate("/ordersummary");
 				}
 				else if (result.statuscode === 0) {
-					toast.error("Incorrect Username/Password");
+					toast.error("Problem while processing, payment, try again");
 				}
 			}
 			else {
@@ -115,7 +117,7 @@ var Checkout = () => {
 									<input type="password" name="cvv" onChange={(e) => setcvv(e.target.value)} placeholder="CVV" className="form-control" /><br />
 								</> : null
 						}
-						<input type="button" className="btn btn-primary" onClick={oncheckout} value="Checkout" /><br /><br />
+						<input type="button" className="btn btn-primary" onClick={oncheckout} value="Confirm Order" /><br /><br />
 					</div>
 
 				</div>

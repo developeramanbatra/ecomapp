@@ -105,21 +105,21 @@ var ManageSubCat=()=>
                 var result = await resp.json(); 
                 if(result.statuscode===1)
                 {
-                    setmsg("Sub Category added successfully")
+                    toast.success("Sub Category added successfully")
                 }
                 else if(result.statuscode===0)
                 {
-                    setmsg("Sub Category not added successfully");
+                    toast.error("Sub Category not added successfully");
                 }
             }
             else
             {
-                setmsg("Error Occured")
+                toast.error("Error Occured")
             }
         }
         catch (err) 
         {
-            setmsg(err);
+            toast.error(err);
         }		
 	}
     const del = async (uid) => 

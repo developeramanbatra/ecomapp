@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-var Header = () => {
+var Header1 = () => {
     return (
         <>
         <div className="agileits_header">
@@ -156,4 +156,4 @@ var Header = () => {
         </>
     )
 }
-export default Header;
+export default Header1;

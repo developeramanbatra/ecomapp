@@ -2,29 +2,29 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-var Showproducts=()=>
+var SearchProducts=()=>
 {
     const [prodsdata,setprodsdata] = useState([]);
     const [params] = useSearchParams();
-    const scid=params.get("subcatid");
+    const searchterm=params.get("query");
     useEffect(()=>
     {
-        fetchprods();
-    },[])
-    var fetchprods=async()=>
+        searchprods();
+    },[searchterm])
+    var searchprods=async()=>
     {
-        if(scid!==undefined)
+        if(searchterm!==undefined)
         {
+            setprodsdata([]);
             try 
             {
-                const resp = await fetch(`http://localhost:9000/api/fetchprodsbysubcatid/${scid}`)
+                const resp = await fetch(`http://localhost:9000/api/searchproducts/${searchterm}`)
                 if(resp.ok)
                 {
                     var result = await resp.json(); 
                     if(result.statuscode===0)
                     {
                         toast.error("No products found");
-                        setprodsdata([]);
                     }
                     else if(result.statuscode===1)
                     {
@@ -55,6 +55,7 @@ var Showproducts=()=>
 	    </div>
 	<div className="login">
 		<div className="container">
+
         {
             prodsdata.length>0?
             <>
@@ -77,7 +78,7 @@ var Showproducts=()=>
                             </figure>
                         </div>
                     </div>
-                </div><br/>
+                </div>
             </div>
             )
             }
@@ -88,4 +89,4 @@ var Showproducts=()=>
     </>
 	)
 }
-export default Showproducts;
+export default SearchProducts;

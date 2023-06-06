@@ -78,7 +78,7 @@ var ShowSubCategory=()=>
                             </figure>
                         </div>
                     </div>
-                </div>
+                </div><br/>
             </div>
             )
             }

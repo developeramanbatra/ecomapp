@@ -115,7 +115,7 @@ i.fa.fa-phone {
     font-size: 20px;
 }
 button.btn.btn-default.search {
-    background:#ffffff;
+    background:#2874f0;
     padding: 11px 12px 11px;
     float: right;
     outline: none;
@@ -146,7 +146,7 @@ button.btn.btn-default.search:hover {
 }
 .w3l_search i.fa.fa-search {
     font-size: 17px;
-	color:#2874f0;
+	color:#ffffff;
 }
 button.w3l_search {
     border: none;
@@ -190,7 +190,7 @@ button.w3view-cart:focus{
 }
 .w3ls_logo_products_left h1 a{
 	font-size: 40px;
-    color:#2874f0;
+    color:#000000;
     text-decoration: none;
     text-transform: uppercase;
     display: block;

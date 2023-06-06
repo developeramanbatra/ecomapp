@@ -10,7 +10,7 @@ var ChangePassword=()=>
 	const [msg,setmsg] = useState();
 	const navigate = useNavigate();
 	const {user,setUser} = useContext(UserContext);
-    
+
 	var onpasschange=async()=>
 	{
         if(newpass===cnewpass)

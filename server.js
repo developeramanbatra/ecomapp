@@ -31,8 +31,7 @@ let mystorage = multer.diskStorage({
 let upload = multer({ storage: mystorage });
 
 
-
-var registerSchema = new mongoose.Schema({name:String,phone:String,username:{type:String,unique:true},password:String},{versionKey: false})
+var registerSchema = new mongoose.Schema({name:String,phone:String,username:{type:String,unique:true},password:String,usertype:String},{versionKey: false})
 
 const registerModel = mongoose.model('register', registerSchema,"register");
 
@@ -42,7 +41,7 @@ const registerModel = mongoose.model('register', registerSchema,"register");
 app.post("/api/register",async (req,res)=>
 {
     const hash = bcrypt.hashSync(req.body.password, 10);
-    var newrecord = new registerModel({name:req.body.name,phone:req.body.phone,username:req.body.username,password:req.body.password});
+    var newrecord = new registerModel({name:req.body.name,phone:req.body.phone,username:req.body.username,password:hash,usertype:req.body.utype});
 
     var result = await newrecord.save();
     console.log(result)
@@ -89,9 +88,9 @@ app.get("/api/searchmember",async(req,res)=>
 
 //LOGIN API
 
-app.post("/api/login",async(req,res)=>
+app.post("/api/login",async (req,res)=>
 {
-    const result=await registerModel.findOne({username:req.body.uname,password:req.body.pass})
+    var result = await registerModel.findOne({username:req.body.uname});
     if(!result)
     {
         res.send({statuscode:0})
@@ -108,8 +107,9 @@ app.post("/api/login",async(req,res)=>
         {
             res.send({statuscode:0})
         }
-    }
+    }   
 })
+
 
 //DELETE Member API
 
@@ -238,7 +238,6 @@ app.put("/api/updatecategory", upload.single('picture'),async (req, res)=>
     }
   });
 
-
 app.delete("/api/delcat/:catid",async(req,res)=>
 {
     const result= await categorymodel.deleteOne({_id:req.params.catid})
@@ -251,9 +250,6 @@ app.delete("/api/delcat/:catid",async(req,res)=>
     res.send({statuscode:0})
     }
 })
-  
-
-
 
 // Sub Categories APIs
 
@@ -286,7 +282,7 @@ app.post("/api/addsubcategory",upload.single('picture'),async(req,res)=>
 app.get("/api/fetchsubcatbycatid",async (req,res)=>
 {
     var result = await subCategoryModel.find({catid:req.query.cid});
-    if(result.length==0)
+    if(result.length===0)
     {
         res.send({statuscode:0})
     }
@@ -295,7 +291,7 @@ app.get("/api/fetchsubcatbycatid",async (req,res)=>
         res.send({statuscode:1,subcatdata:result})
     }   
 })
-//241 -299 
+//241-299
 app.get("/api/fetchsubcatbyid",async (req,res)=>
 {
     var result = await subCategoryModel.findOne({_id:req.query.subcatid});
@@ -346,18 +342,18 @@ app.put("/api/updatesubcategory", upload.single('picture'),async (req, res)=>
     }
   });
 
-  app.delete("/api/delsubcat/:subcatid",async(req,res)=>
-  {
-      const result= await subCategoryModel.deleteOne({_id:req.params.subcatid})
-      if(result.deletedCount===1)
-      {
-      res.send({statuscode:1})
-      } 
-      else
-      {
-      res.send({statuscode:0})
-      }
-  })
+app.delete("/api/delsubcat/:subcatid",async(req,res)=>
+{
+    const result= await subCategoryModel.deleteOne({_id:req.params.subcatid})
+    if(result.deletedCount===1)
+    {
+    res.send({statuscode:1})
+    } 
+    else
+    {
+    res.send({statuscode:0})
+    }
+})
 
 //Product APIs
 
@@ -412,6 +408,48 @@ app.get("/api/fetchprodbyid/:pid",async (req,res)=>
     }   
 })
 
+app.get("/api/searchproducts/:term", async(req, res)=>
+{
+  var searchtext=req.params.term;
+  var result = await productModel.find({prodname: { $regex: '.*' + searchtext ,$options:'i' }});
+    if (!result)
+    {
+        res.json({statuscode:0})
+    }
+    else
+    {     
+        res.send({statuscode:1,prodsdata:result});
+    }
+});
+
+app.get("/api/fetchlatestproducts",async (req,res)=>
+{
+    var result = await productModel.find().sort({"addedon":-1}).limit(6);
+    if(result.length===0)
+    {
+        res.send({statuscode:0})
+    }
+    else
+    {
+        res.send({statuscode:1,prodsdata:result})
+    }
+   
+})
+
+app.get("/api/fetchfeaturedproducts",async (req,res)=>
+{
+    var result = await productModel.find({featured:"yes"}).limit(6);
+    if(result.length===0)
+    {
+        res.send({statuscode:0})
+    }
+    else
+    {
+        res.send({statuscode:1,prodsdata:result})
+    }
+   
+})
+
 app.delete("/api/delproduct/:prodid",async(req,res)=>
 {
     const result= await productModel.deleteOne({_id:req.params.prodid})
@@ -461,7 +499,7 @@ app.get("/api/fetchcart/:uname",async (req,res)=>
 })
 
 //Checkout/Order APIs
-var orderSchema = new mongoose.Schema({address:String,orderamt:Number,pmode:String,username:String,OrderDate:String,carddetails:[String],status:String,items:[String]},{versionKey: false})
+var orderSchema = new mongoose.Schema({address:String,orderamt:Number,pmode:String,username:String,OrderDate:String,carddetails:Object,status:String,items:[Object]},{versionKey: false})
 
 const orderModel = mongoose.model('Orders', orderSchema,"Orders");
 
@@ -474,7 +512,37 @@ app.post("/api/saveorder",async (req,res)=>
     console.log(result)
     if(result)
     {
-        res.send({statuscode:1})
+        let updateresp=false;
+        var updatelist=req.body.cartdata;//updatelist becomes an array becoz we are saving an json array into it
+        for(let x=0;x<updatelist.length;x++)
+        {
+            var updateresult = await productModel.updateOne({_id:updatelist[x].prodid},{$inc: {"stock":-updatelist[x].qty}});
+            if(updateresult.modifiedCount===1)
+            {
+                updateresp=true;
+            }
+            else
+            {
+                updateresp=false;
+            }
+        }
+
+        if(updateresp==true)
+        {
+            var delres = cartModel.deleteMany({username:req.body.uname})
+            if((await delres).deletedCount>=1)
+            {
+                res.json({statuscode:1});
+            }
+            else
+            {
+                res.json({statuscode:0});
+            }
+        }
+        else
+        {
+            res.json({statuscode:0});
+        }
     }
     else
     {
@@ -496,7 +564,62 @@ app.get("/api/fetchorderdetails",async (req,res)=>
     }   
 })
 
+app.get("/api/fetchorders",async (req,res)=>
+{
+    var result = await orderModel.find().sort({"OrderDate":-1});
+    if(result.length===0)
+    {
+        res.send({statuscode:0})
+    }
+    else
+    {
+        res.send({statuscode:1,ordersdata:result})
+    }
+   
+})
+
+app.get("/api/fetchuserorders/:uname",async (req,res)=>
+{
+    var result = await orderModel.find({username:req.params.uname}).sort({"OrderDate":-1});
+    if(result.length===0)
+    {
+        res.send({statuscode:0})
+    }
+    else
+    {
+        res.send({statuscode:1,ordersdata:result})
+    }
+   
+})
+
+app.get("/api/fetchordersitems/:oid",async (req,res)=>
+{
+    var result = await orderModel.findOne({_id:req.params.oid});
+    if(!result)
+    {
+        res.send({statuscode:0})
+    }
+    else
+    {
+        res.send({statuscode:1,orderitems:result.items})
+    }
+   
+})
+
+app.put("/api/updatestatus", async (req, res)=>
+{
+    var updateresult = await orderModel.updateOne({ _id: req.body.oid }, { $set: {status:req.body.newst}});
+    if(updateresult.modifiedCount===1)
+    {
+        res.send({statuscode:1});
+    }
+    else
+    {
+        res.send({statuscode:0})
+    }
+  });
+
 app.listen(port,()=>
 {
-    console.log("Server is running...");
+    console.log(`Server is Listening to Port [${port}]`);
 })

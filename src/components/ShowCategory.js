@@ -41,21 +41,21 @@ var ShowCategory=()=>
 
 	return(
     <>
-		<div className="breadcrumbs">
+		{/* <div className="breadcrumbs">
 		<div className="container">
 			<ol className="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
 				<li><Link to="/homepage"><span className="glyphicon glyphicon-home" aria-hidden="true"></span>Home</Link></li>
 				<li className="active">Categories</li>
 			</ol>
 		</div>
-	    </div>
+	    </div> */}
 	<div className="login">
 		<div className="container">
 
         {
             catlist.length>0?
             <>
-            <h2>Categories</h2><br/>
+            <h2>Shopping Plaza</h2><br/>
             {
             catlist.map((data,i)=>
             <div key={i} className="col-md-4 top_brand_left">
@@ -74,7 +74,7 @@ var ShowCategory=()=>
                             </figure>
                         </div>
                     </div>
-                </div>
+                </div><br/>
             </div>
             )
             }

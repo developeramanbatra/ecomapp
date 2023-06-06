@@ -6,7 +6,6 @@ var Login=()=>
 {
 	const [uname,setuname] = useState();
 	const [pass,setpass] = useState();
-	const [msg,setmsg] = useState();
 	const navigate = useNavigate();
 	const {setUser} = useContext(UserContext);
 	var onlogin=async()=>
@@ -28,10 +27,16 @@ var Login=()=>
 				var result = await resp.json(); //result={msg:"Signup Successfull"}
 				if(result.statuscode===1)
 				{
-					setmsg("");
 					setUser(result.membdata);
 					sessionStorage.setItem("userinfo", JSON.stringify(result.membdata));
-					navigate("/homepage");
+					if(result.membdata.usertype==="admin")
+					{
+						navigate("/adminhome");
+					}
+					else
+					{
+						navigate("/homepage");
+					}
 				}
 				else if(result.statuscode===0)
 				{
@@ -72,11 +77,10 @@ var Login=()=>
 					<div className="forgot">
 						<a href="#">Forgot Password?</a>
 					</div>
-					{msg}
 				</form>
 			</div>
 			<h4>For New People</h4>
-			<p><a href="registered.html">Register Here</a> (Or) go back to <a href="index.html">Home<span className="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a></p>
+			<p><Link to="/signup">Register Here</Link> (Or) go back to <Link to="/">Home<span className="glyphicon glyphicon-menu-right" aria-hidden="true"></span></Link></p>
 		</div>
 	</div>
     </>)

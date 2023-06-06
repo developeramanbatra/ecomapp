@@ -16,6 +16,16 @@ import ShowSubCategory from './ShowSubCategory';
 import Showproducts from './Showproducts';
 import ProductDetails from './ProductDetails';
 import ShowCart from './ShowCart';
+import Checkout from './Checkout';
+import OrderSummary from './OrderSummary';
+import ViewOrders from './ViewOrders';
+import OrderProducts from './OrderProducts';
+import UpdateStatus from './UpdateStatus';
+import UserOrders from './UserOrders';
+import SearchProducts from './SearchProducts';
+import AdminHomepage from './AdminHomepage';
+import CreateAdmin from './CreateAdmin';
+import UserRoutesProtector from './UserRoutesProtector';
 const SiteRoutes=()=>
 {
     return(
@@ -37,7 +47,16 @@ const SiteRoutes=()=>
             <Route path='/manageproduct' element={<ManageProduct/>}/>
             <Route path='/updatesubcategory' element={<UpdateSubCat/>}/>
             <Route path='/updateproduct' element={<UpdateProduct/>}/>
-            <Route path='/changepassword' element={<ChangePassword/>}/>
+            <Route path='/changepassword' element={<UserRoutesProtector MyComp={ChangePassword}/>}/>
+            <Route path='/checkout' element={<Checkout/>}/>
+            <Route path='/ordersummary' element={<UserRoutesProtector MyComp={OrderSummary}/>}/>
+            <Route path='/vieworders' element={<ViewOrders/>}/>
+            <Route path='/orderproducts' element={<OrderProducts/>}/>
+            <Route path='/updatestatus' element={<UpdateStatus/>}/>
+            <Route path='/orderhistory' element={<UserOrders/>}/>
+            <Route path='/searchproducts' element={<SearchProducts/>}/>
+            <Route path='/adminhome' element={<AdminHomepage/>}/>
+            <Route path='/createadmin' element={<CreateAdmin/>}/>
             <Route path='/*' element={<h1>Page Not Found</h1>}/>
         </Routes>
     )
