@@ -10,7 +10,7 @@ var Showproducts=()=>
     useEffect(()=>
     {
         fetchprods();
-    },[])
+    },[scid])
     var fetchprods=async()=>
     {
         if(scid!==undefined)

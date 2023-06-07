@@ -8,17 +8,17 @@ var AdminRoutesProtection=(props)=>
     const mynavigate = useNavigate();
     useEffect(()=>
     {
-        if(!user)
-        {
-            mynavigate("/login");
-        }
-        else
-        {
-            if(user.usertype!="admin")
-            {
-                mynavigate("/login");
-            }
-        }
+        // if(!user)
+        // {
+        //     mynavigate("/login");
+        // }
+        // else
+        // {
+        //     if(user.usertype!="admin")
+        //     {
+        //         mynavigate("/login");
+        //     }
+        // }
     },[user])
 
     return(

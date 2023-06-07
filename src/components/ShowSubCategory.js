@@ -10,7 +10,7 @@ var ShowSubCategory=()=>
     useEffect(()=>
     {
         fetchsubcat();
-    },[])
+    },[cid])
     var fetchsubcat=async()=>
     {
         if(cid!==undefined)

@@ -5,6 +5,8 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
+const uuid = require('uuid');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/ecomdb').then(() => console.log('Connected to MongoDB!'));
@@ -30,7 +32,14 @@ let mystorage = multer.diskStorage({
 });
 let upload = multer({ storage: mystorage });
 
-
+const transporter = nodemailer.createTransport({
+    service : 'outlook',
+    auth : {
+        user : 'ecom-project@outlook.com',
+        pass : 'asdf7890'
+    }
+  })
+ 
 var registerSchema = new mongoose.Schema({name:String,phone:String,username:{type:String,unique:true},password:String,usertype:String},{versionKey: false})
 
 const registerModel = mongoose.model('register', registerSchema,"register");
@@ -424,7 +433,7 @@ app.get("/api/searchproducts/:term", async(req, res)=>
 
 app.get("/api/fetchlatestproducts",async (req,res)=>
 {
-    var result = await productModel.find().sort({"addedon":-1}).limit(6);
+    var result = await productModel.find().sort({"addedon":-1}).limit(9);
     if(result.length===0)
     {
         res.send({statuscode:0})
@@ -619,6 +628,105 @@ app.put("/api/updatestatus", async (req, res)=>
     }
   });
 
+app.post("/api/contactus",async (req, res)=> 
+{
+    const mailOptions = {
+    from: 'ecom-project@outlook.com',
+    to: 'developer.amanbatra@gmail.com',
+    subject: 'Message from Website - Contact Us',
+    text: `Name:- ${req.body.name}\nPhone:-${req.body.phone}\nEmail:-${req.body.email}\nMessage:-${req.body.message}`
+    };
+
+    // Use the transport object to send the email
+    transporter.sendMail(mailOptions, (error, info) => 
+    {
+        if (error) {
+        console.log(error);
+        res.send({msg:'Error sending email'});
+        } else 
+        {
+        console.log('Email sent: ' + info.response);
+        res.send({msg:"Message sent successfully"});
+        }
+    });
+});
+
+var resetPasswordSchema = new mongoose.Schema({username:String,token:String,exptime:String}, { versionKey: false } );
+
+var resetpassModel = mongoose.model("resetpass",resetPasswordSchema,"resetpass");
+
+app.get('/api/forgotpassword', async (req, res) => 
+{
+  const userdata = await registerModel.findOne({ username: req.query.username });
+  if (!userdata) 
+  {
+    return res.send({msg:'Invalid Username'});
+  }
+  else
+  {
+    var resettoken = uuid.v4();
+    var minutesToAdd=15;
+    var currentDate = new Date();
+    var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
+
+    var newreset = new resetpassModel({username:req.query.username,token:resettoken,exptime:futureDate});
+    let saveresult = await newreset.save();
+
+    if(saveresult)
+    {
+      const resetLink = `http://localhost:3000/resetpassword?token=${resettoken}`;
+      const mailOptions = {
+      from: 'ecom-project@outlook.com',
+      to: req.query.username,
+      subject: 'Reset your password::ShoppingPlaza.com',
+      text: `Hi ${userdata.name},\n\n Please click on the following link to reset your password: \n\n ${resetLink}`
+      };
+      // Use the transport object to send the email
+      transporter.sendMail(mailOptions, (error, info) => 
+      {
+        if (error) {
+          console.log(error);
+          res.status(500).send({msg:'Error sending email'});
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.status(200).send({msg:"Please check your mail to reset your password"});
+        }
+      });
+    }
+    else
+    {
+      res.send({msg:"Error, try again"});
+    }
+  }
+  // user.isActive = true;
+  // await user.save();
+  // return res.status(200).send({msg:'Account activated successfully'});
+});
+
+app.get('/api/checktoken', async (req, res) => 
+{
+const resetdata = await resetpassModel.findOne({ token: req.query.token });
+if (!resetdata) 
+{
+  return res.send({statuscode:-1,msg:'Invalid Reset Token'});
+}
+else
+{
+  console.log(resetdata);
+  var exptime = new Date(resetdata.exptime);//07th June 12:27:52
+  var currenttime = new Date();//7th June 12:22:21
+
+  if(currenttime<exptime)
+  {
+    res.send({statuscode:1,username:resetdata.username})
+  }
+  else
+  {
+    return res.send({statuscode:0,msg:'Link Expired. It was valid for 15 mins only. Request new link'});
+  }
+}
+});
+  
 app.listen(port,()=>
 {
     console.log(`Server is Listening to Port [${port}]`);

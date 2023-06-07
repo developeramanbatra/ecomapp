@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../UserContext";
 import { useContext, useState } from "react";
-
+ 
 var Header = () => {
 	const[term,setterm] = useState();
 	const {user, setUser} = useContext(UserContext);
@@ -29,7 +29,7 @@ var Header = () => {
 			{
 				user?
 				<p>
-					<span>Welcome {user.name}</span>
+					<span>🤝Welcome {user.name}</span>
 				</p>:
 				<p>
 					<span>Welcome Guest</span>
@@ -101,8 +101,13 @@ var Header = () => {
 				<div className="collapse navbar-collapse" id="bs-megadropdown-tabs">
 					<ul className="nav navbar-nav">
 						<li><Link to="/">🏠Home</Link></li>	
-						<li><Link to="/products">🎧Products</Link></li>	
-						<li><Link to="/contactus">Contact</Link></li>     
+						<li><Link to="/subcategories?catid=647043548e54f7076d8003f3">🎧Electronics</Link></li>     
+						<li><Link to="/subcategories?catid=6470439c8e54f7076d8003fa">🛍️Fashion</Link></li>     
+						<li><Link to="/subcategories?catid=647043e58e54f7076d8003fd">🔊Appliances</Link></li>     
+						<li><Link to="/subcategories?catid=647044338e54f7076d800400">📱Mobiles</Link></li>     
+						<li><Link to="/subcategories?catid=647044668e54f7076d800403">🛖Home Essentials</Link></li>     
+						<li><Link to="/subcategories?catid=6470447f8e54f7076d800406">👜Grocery</Link></li> 
+						<li><Link to="/contactus">Contact</Link></li>    
 					</ul>
 				</div>
 			</nav>

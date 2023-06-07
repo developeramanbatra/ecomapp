@@ -4,7 +4,7 @@ var AdminHomepage=()=>
     <>
 	<div className="login">
 		<div className="container">
-			<h2>Welcome Admin</h2>	
+			<h4>Welcome Admin</h4>	
 		</div>
 	</div>
     </>

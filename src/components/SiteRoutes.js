@@ -26,6 +26,10 @@ import SearchProducts from './SearchProducts';
 import AdminHomepage from './AdminHomepage';
 import CreateAdmin from './CreateAdmin';
 import UserRoutesProtector from './UserRoutesProtector';
+import AdminRoutesProtection from './AdminRoutesProtection';
+import ContactUs from './ContactUs';
+import ForgotPassword from './ForgotPassword';
+import ResetPassword from './ResetPassword';
 const SiteRoutes=()=>
 {
     return(
@@ -35,29 +39,32 @@ const SiteRoutes=()=>
             <Route path='/login' element={<Login/>}/>
             <Route path='/signup' element={<Signup/>}/>
             <Route path='/thanks' element={<Thanks/>}/>
-            <Route path='/viewmembers' element={<ViewMembers/>}/>
-            <Route path='/searchuser' element={<SearchUser/>}/>
+            <Route path='/viewmembers' element={<AdminRoutesProtection MyComp={ViewMembers}/>}/>
+            <Route path='/searchuser' element={<AdminRoutesProtection MyComp={SearchUser}/>}/>
             <Route path='/categories' element={<ShowCategory/>}/>
             <Route path='/subcategories' element={<ShowSubCategory/>}/>
             <Route path='/products' element={<Showproducts/>}/>
             <Route path='/details' element={<ProductDetails/>}/>
-            <Route path='/managecategory' element={<ManageCat/>}/>
-            <Route path='/cart' element={<ShowCart/>}/>
-            <Route path='/managesubcategory' element={<ManageSubCat/>}/>
-            <Route path='/manageproduct' element={<ManageProduct/>}/>
-            <Route path='/updatesubcategory' element={<UpdateSubCat/>}/>
-            <Route path='/updateproduct' element={<UpdateProduct/>}/>
+            <Route path='/managecategory' element={<AdminRoutesProtection MyComp={ManageCat}/>}/>
+            <Route path='/cart' element={<UserRoutesProtector MyComp={ShowCart}/>}/>
+            <Route path='/managesubcategory' element={<AdminRoutesProtection MyComp={ManageSubCat}/>}/>
+            <Route path='/manageproduct' element={<AdminRoutesProtection MyComp={ManageProduct}/>}/>
+            <Route path='/updatesubcategory' element={<AdminRoutesProtection MyComp={UpdateSubCat}/>}/>
+            <Route path='/updateproduct' element={<AdminRoutesProtection MyComp={UpdateProduct}/>}/>
             <Route path='/changepassword' element={<UserRoutesProtector MyComp={ChangePassword}/>}/>
-            <Route path='/checkout' element={<Checkout/>}/>
+            <Route path='/checkout' element={<UserRoutesProtector MyComp={Checkout}/>}/>
             <Route path='/ordersummary' element={<UserRoutesProtector MyComp={OrderSummary}/>}/>
-            <Route path='/vieworders' element={<ViewOrders/>}/>
-            <Route path='/orderproducts' element={<OrderProducts/>}/>
-            <Route path='/updatestatus' element={<UpdateStatus/>}/>
-            <Route path='/orderhistory' element={<UserOrders/>}/>
+            <Route path='/vieworders' element={<AdminRoutesProtection MyComp={ViewOrders}/>}/>
+            <Route path='/orderproducts' element={<UserRoutesProtector MyComp={OrderProducts}/>}/>
+            <Route path='/updatestatus' element={<AdminRoutesProtection MyComp={UpdateStatus}/>}/>
+            <Route path='/orderhistory' element={<UserRoutesProtector MyComp={UserOrders}/>}/>
             <Route path='/searchproducts' element={<SearchProducts/>}/>
-            <Route path='/adminhome' element={<AdminHomepage/>}/>
-            <Route path='/createadmin' element={<CreateAdmin/>}/>
-            <Route path='/*' element={<h1>Page Not Found</h1>}/>
+            <Route path='/adminhome' element={<AdminRoutesProtection MyComp={AdminHomepage}/>}/>
+            <Route path='/createadmin' element={<AdminRoutesProtection MyComp={CreateAdmin}/>}/>
+            <Route path='/contactus' element={<ContactUs/>}/>
+            <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+            <Route path='/resetpassword' element={<ResetPassword/>}/>
+            <Route path='/*' element={<h1>OOPS!...Page Not Found. Please Check Your Link.</h1>}/>
         </Routes>
     )
 }

@@ -104,7 +104,7 @@ var Homepage=()=>
                             </figure>
                         </div>
                     </div>
-                </div>
+                </div><br/>
             </div>
             )
             }

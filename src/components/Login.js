@@ -75,7 +75,7 @@ var Login=()=>
 					
 					<input type="button" onClick={onlogin} value="Login"/><br/>
 					<div className="forgot">
-						<a href="#">Forgot Password?</a>
+						<Link to="/forgotpassword">Forgot Password?</Link>
 					</div>
 				</form>
 			</div>
