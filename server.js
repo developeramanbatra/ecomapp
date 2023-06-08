@@ -507,6 +507,19 @@ app.get("/api/fetchcart/:uname",async (req,res)=>
     }   
 })
 
+app.delete("/api/delcartbyid/:uid",async(req,res)=>
+{
+    const result= await cartModel.deleteOne({_id:req.params.uid})
+    if(result.deletedCount===1)
+    {
+    res.send({statuscode:1})
+    } 
+    else
+    {
+    res.send({statuscode:0})
+    }
+})
+
 //Checkout/Order APIs
 var orderSchema = new mongoose.Schema({address:String,orderamt:Number,pmode:String,username:String,OrderDate:String,carddetails:Object,status:String,items:[Object]},{versionKey: false})
 
